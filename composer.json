@@ -1,0 +1,8 @@
+{
+    "name": "rhildred/oauth2",
+    "autoload": {
+        "psr-0": {
+            "": ""
+        }
+    }
+}
