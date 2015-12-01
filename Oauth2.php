@@ -14,14 +14,14 @@ class Oauth2
 			$this->sRedirect = preg_replace($rgxPort, "", $this->sRedirect);
 		}
 	}
-	public function redirect()
+	public function redirectUrl()
 	{
 		$auth_url = "https://accounts.google.com/o/oauth2/auth?redirect_uri=" . $this->sRedirect
 		 . "&client_id=" . $this->oCreds->ClientID
 		 . "&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
 		 . "&response_type=code&max_auth_age=0";
 		//forward user to Facebook auth page
-		header("Location: $auth_url");
+		return $auth_url;
 	}
 	private function run_curl($url, $method = 'GET', $postvals = null){
 	    $ch = curl_init($url);
@@ -53,6 +53,7 @@ class Oauth2
 	}
 	public function handleCode($code)
 	{
+        	session_start();
 		$postvals = array('grant_type' => 'authorization_code',
 				'client_id' => $this->oCreds->ClientID,
 				'client_secret' => $this->oCreds->ClientSecret,
@@ -64,8 +65,9 @@ class Oauth2
 		//construct URI to fetch profile for current user
 		$profile_url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" . $token->access_token;
 		//fetch profile of current user
-		$oProfile = json_decode($this->run_curl($profile_url, 'GET'));
+		$_SESSION["CurrentUser"] = $oProfile = json_decode($this->run_curl($profile_url, 'GET'));
 		return $oProfile;
 	}
 }
 ?>
+
