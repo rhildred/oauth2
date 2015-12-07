@@ -67,7 +67,7 @@ class Oauth2
 		//fetch profile of current user
 		$_SESSION["CurrentUser"] = $oProfile = json_decode($this->run_curl($profile_url, 'GET'));
 	        //check to see if current user is in the list
-	        if(count($this->oCreds->Users) > 0){
+	        if(isset($this->oCreds->Users)){
 		        foreach($this->oCreds->Users as $sEmail){
 		            if($sEmail == $oProfile->email)return $oProfile;
 		        }
