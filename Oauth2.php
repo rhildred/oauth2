@@ -66,6 +66,14 @@ class Oauth2
 		$profile_url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" . $token->access_token;
 		//fetch profile of current user
 		$_SESSION["CurrentUser"] = $oProfile = json_decode($this->run_curl($profile_url, 'GET'));
+	        //check to see if current user is in the list
+	        if(count($this->oCreds->Users) > 0){
+		        foreach($this->oCreds->Users as $sEmail){
+		            if($sEmail == $oProfile->email)return $oProfile;
+		        }
+			throw new Exception('user not in list');
+	        }
+
 		return $oProfile;
 	}
 }
